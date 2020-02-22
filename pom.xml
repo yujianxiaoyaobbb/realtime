@@ -19,6 +19,8 @@
         <module>gmall-mocker</module>
         <module>gmall-logger</module>
         <module>realtime-dau</module>
+        <module>dw-chart</module>
+        <module>gmall-canal</module>
     </modules>
 
     <properties>
