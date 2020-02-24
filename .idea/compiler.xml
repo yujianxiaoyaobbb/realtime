@@ -12,6 +12,7 @@
         <module name="dw-chart" />
         <module name="gmall-mocker" />
         <module name="gmall-logger" />
+        <module name="gmall-es" />
         <module name="gmall-publisher" />
         <module name="gmall-canal" />
       </profile>
@@ -21,6 +22,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="gmall-canal" options="-parameters" />
       <module name="gmall-common" options="-parameters" />
+      <module name="gmall-es" options="-parameters" />
       <module name="gmall-logger" options="-parameters" />
       <module name="gmall-mocker" options="-parameters" />
       <module name="gmall-publisher" options="" />

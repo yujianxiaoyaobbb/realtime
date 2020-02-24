@@ -21,6 +21,7 @@
         <module>realtime-dau</module>
         <module>dw-chart</module>
         <module>gmall-canal</module>
+        <module>gmall-es</module>
     </modules>
 
     <properties>
