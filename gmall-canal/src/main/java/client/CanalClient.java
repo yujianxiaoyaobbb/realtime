@@ -12,6 +12,7 @@ import utils.KafkaSender;
 
 import java.net.InetSocketAddress;
 import java.util.List;
+import java.util.Random;
 
 
 public class CanalClient {
@@ -58,15 +59,34 @@ public class CanalClient {
         //判断是否是订单表并且是新增的
         if("order_info".equals(tableName) && CanalEntry.EventType.INSERT.equals(eventType)){
             for (CanalEntry.RowData rowData : rowChange.getRowDatasList()) {
-                //创建Json对象
-                JSONObject jsonObject = new JSONObject();
-                for (CanalEntry.Column column : rowData.getAfterColumnsList()) {
-                    jsonObject.put(column.getName(),column.getValue());
-                }
-                System.out.println(jsonObject.toJSONString());
-                //将json写入kafka
-                KafkaSender.send(GmallConstants.GMALL_ORDER_INFO_TOPIC,jsonObject.toJSONString());
+                sendToKafka(rowData,GmallConstants.GMALL_ORDER_INFO_TOPIC);
+            }
+            //判断是订单明细表并且是新增
+        }else if("order_detail".equals(tableName) && CanalEntry.EventType.INSERT.equals(eventType)){
+            for (CanalEntry.RowData rowData : rowChange.getRowDatasList()) {
+                sendToKafka(rowData,GmallConstants.GMALL_ORDER_DETAIL_TOPIC);
+            }
+            //判断是用户表并且是新增或修改
+        }else if("user_info".equals(tableName) && (CanalEntry.EventType.INSERT.equals(eventType) || CanalEntry.EventType.UPDATE.equals(eventType))){
+            for (CanalEntry.RowData rowData : rowChange.getRowDatasList()) {
+                sendToKafka(rowData,GmallConstants.GMALL_USER_INFO_TOPIC);
             }
         }
+    }
+
+    private static void sendToKafka(CanalEntry.RowData rowData,String topic) {
+        //创建Json对象
+        JSONObject jsonObject = new JSONObject();
+        for (CanalEntry.Column column : rowData.getAfterColumnsList()) {
+            jsonObject.put(column.getName(),column.getValue());
+        }
+        System.out.println(jsonObject.toJSONString());
+        try {
+            Thread.sleep(new Random().nextInt(5) * 1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        //将json写入kafka
+        KafkaSender.send(topic,jsonObject.toJSONString());
     }
 }
